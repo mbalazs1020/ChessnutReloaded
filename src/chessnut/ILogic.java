@@ -1,0 +1,16 @@
+package chessnut;
+
+import chessnut.logic.*;
+
+
+/**
+ * Ezen az interfészen keresztül elérhetõ a játéklogika.
+ */
+public interface ILogic
+{
+	/**  Player/AI általi kattintás ezen jut fel a logikához   */
+	void click(ClickData position);                                
+	
+	/**  IPlayer interfészû elemre referencia beállítása   */
+	public abstract void setPlayer( IPlayer player );      
+}
