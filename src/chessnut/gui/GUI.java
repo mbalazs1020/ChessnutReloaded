@@ -67,7 +67,7 @@ public class GUI extends JFrame implements IPlayer
 	public GUI()
 	{
 		/** Alapvetõ beállítások */
-		super("Chessnut");                                    // Létrejön az ablak
+		super("Chessnut Reloaded");                                    // Létrejön az ablak
 		setSize(600, 600);                                    // Ablakméret beállítása
 		setDefaultCloseOperation(EXIT_ON_CLOSE);              // Alapértelmezett kilépési beállítás
 		setLayout(null);                                      // Layout
@@ -78,10 +78,10 @@ public class GUI extends JFrame implements IPlayer
 		 * Csatlakozás szerverhez
 		 * Gép elleni játék */
 		JMenuBar menuBar = new JMenuBar();                    // Menüsor létrejön
-		JMenu menu = new JMenu("Start game");                 // Start game menüpont
+		JMenu menu = new JMenu("Robot nélküli játék");                 // Start game menüpont
 		
 		/** Szerverindítás almenüpont */
-		JMenuItem menuItem = new JMenuItem("Start server");   // Start szerver almenüpont
+		JMenuItem menuItem = new JMenuItem("Szerver indítása");   // Start szerver almenüpont
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -99,7 +99,7 @@ public class GUI extends JFrame implements IPlayer
 		menu.add(menuItem);
 		
 		/** Szerverhez csatlakozás almenüpont */
-		menuItem = new JMenuItem("Connect to server");        // Connect to server játékmód almenüpontja
+		menuItem = new JMenuItem("Csatlakozás szerverhez");        // Connect to server játékmód almenüpontja
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -124,7 +124,7 @@ public class GUI extends JFrame implements IPlayer
 		menu.add(menuItem);
 
 		/** Gép elleni játék almenüpontja */
-		menuItem = new JMenuItem("Single player game");       // AI elleni játék almenüpontja
+		menuItem = new JMenuItem("Játék a gép ellen");       // AI elleni játék almenüpontja
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -141,10 +141,111 @@ public class GUI extends JFrame implements IPlayer
 		});
 		menu.add(menuItem);
 		
+		/** Gép a gép ellen játék almenüpontja */
+		menuItem = new JMenuItem("Gép a gép ellen");       //  játék almenüpontja
+		menuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// AI elleni játék indítása
+				if( !gameStarted )
+				{
+					ChessnutReloaded.setupAIvsAI(); // Singleplayer setup
+					myPlayerColor = true; // fehér
+					gameStarted = true;
+				}
+			}
+		});
+		menu.add(menuItem);
+		
 		menuBar.add(menu);
+		
+		
+        menu = new JMenu("Robot játék");                 // Start game menüpont
+        /*
+         * - Valós játék robot ellen
+         * - Szerver indítás: Online játék robot végrehajtással
+         * - Gép elleni játék robot végrehajtással
+         * - Gép a gép ellen játék robot végrehajtással
+         */
+		
+		/** Szerverindítás almenüpont */
+		menuItem = new JMenuItem("Valós játék robot ellen");   // Start szerver almenüpont
+		menuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// Szerver indítása, ha még nem fut játék
+				if( !gameStarted )
+				{
+					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
+					myPlayerColor = true; // white
+					gameStarted = true;
+				}
+			}
+		});
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Szerver indítás: Online játék robot végrehajtással");   // Start szerver almenüpont
+		menuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// Szerver indítása, ha még nem fut játék
+				if( !gameStarted )
+				{
+					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
+					myPlayerColor = true; // white
+					gameStarted = true;
+				}
+			}
+		});
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Gép elleni játék robot végrehajtással");   // Start szerver almenüpont
+		menuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// Szerver indítása, ha még nem fut játék
+				if( !gameStarted )
+				{
+					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
+					myPlayerColor = true; // white
+					gameStarted = true;
+				}
+			}
+		});
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Gép a gép ellen játék robot végrehajtással");   // Start szerver almenüpont
+		menuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// Szerver indítása, ha még nem fut játék
+				if( !gameStarted )
+				{
+					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
+					myPlayerColor = true; // white
+					gameStarted = true;
+				}
+			}
+		});
+		menu.add(menuItem);
+		
+
+		
+		menuBar.add(menu);
+		
 
 		/** Kilépés menüpont */
-		menuItem = new JMenuItem("Exit");                      // Kilépõ gomb
+		menuItem = new JMenuItem("Kilépés");                      // Kilépõ gomb
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -164,6 +265,8 @@ public class GUI extends JFrame implements IPlayer
 		     @Override
 		     public void mousePressed(MouseEvent e) {
 		 //       System.out.println("X" + e.getX() + " Y" + e.getY() );
+		    	 
+		    	if( logic == null ) return;
 		        
 		        int width=getContentPane().getWidth();
 				int height=getContentPane().getHeight();

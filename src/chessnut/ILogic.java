@@ -12,5 +12,5 @@ public interface ILogic
 	void click(ClickData position);                                
 	
 	/**  IPlayer interfészû elemre referencia beállítása   */
-	public abstract void setPlayer( IPlayer player );      
+	public abstract void setPlayer2( IPlayer player );      
 }

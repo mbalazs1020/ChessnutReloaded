@@ -55,7 +55,7 @@ public class NetworkClient extends Network implements ILogic
 	 * IPlayer referencia beállítása
 	 * @param player: akire a referencia mutat
 	 */
-	public void setPlayer(IPlayer player)
+	public void setPlayer2(IPlayer player)
 	{
 		this.gui = player;
 	}

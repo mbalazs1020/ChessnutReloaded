@@ -17,11 +17,14 @@ public class GameLogic implements ILogic
 	/**  Sakktáblám   */
 	Board chessboard;
 	
-	/**  Egyik játékos a helyi GUI   */
+	/**  Egyik játékos, általában a helyi GUI   */
 	IPlayer gui;
 	
 	/**  Másik játékos az AI/Network   */
 	IPlayer opponent;
+	
+	/**  Obszerváló játékos, aki csak a táblát nézegeti */
+	IPlayer observer;
 
 	/**  Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem   */
 	private boolean gameStarted = false;
@@ -41,18 +44,36 @@ public class GameLogic implements ILogic
 		chessboard = new Board(); // Tábla létrehozása
 		this.gui = gui;
 	}
+	
+	public GameLogic()
+	{
+		chessboard = new Board(); // Tábla létrehozása
+	}
 
 
+	public void setPlayer1( IPlayer player )
+	{
+		this.gui = player;
+	}
+	
 	/**
 	 * Ezzel lehet beállítani a túloldali játékosra vonatkozó referenciát (AI / NetworkServer)
 	 * @param player: akire a referencia beállítódik
 	 */
 	@Override
-	public void setPlayer(IPlayer player)
+	public void setPlayer2(IPlayer player)
 	{
 		this.opponent = player;
-		chessboard = new Board();   // Sakktáblát inicializálom
-		sendInitialBoardToBothPlayers(); // Kiküldöm a kezdeti sakktáblákat is
+	}
+	
+	public void setObserver( IPlayer obs )
+	{
+		this.observer = obs;
+	}
+	
+	public void START_GAME()
+	{
+		sendInitialBoardToBothPlayers(); // Kiküldöm a kezdeti sakktáblákat, kezdõdhet
 	}
 
 	
@@ -174,6 +195,11 @@ public class GameLogic implements ILogic
 	{
 		gui.setChessboard(chessboard);
 		opponent.setChessboard(chessboard);
+		
+		if(observer != null)
+		{
+			observer.setChessboard(chessboard);
+		}
 	}
 
 	/**
@@ -212,6 +238,7 @@ public class GameLogic implements ILogic
 
 			// Mehet ki a tábla
 			sendChessboardToBoth();
+			
 			gameStarted = true;
 		}
 	}

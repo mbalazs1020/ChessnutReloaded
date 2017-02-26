@@ -1,6 +1,7 @@
 package chessnut;
 
 
+import chess.pieces.Piece;
 import chess.player.AI;
 import chessnut.gui.*;
 import chessnut.logic.*;
@@ -39,9 +40,9 @@ public class ChessnutReloaded
 		Logic = new GameLogic(GUI);                  // Játéklogikát létrehozom
 		Opponent  = new NetworkServer(Logic);        // Szerver oldali hálózatot létrehozom
 		GUI.setGameLogic(Logic);                     // Beállítom a GUI gamelogic-ját
-		Logic.setPlayer(Opponent);                   // Beállítom a hálózatot ellenfélnek
+		Logic.setPlayer2(Opponent);                   // Beállítom a hálózatot ellenfélnek
 		((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
-		
+		((GameLogic) Logic).START_GAME();
 	}
 	
 	
@@ -52,10 +53,10 @@ public class ChessnutReloaded
 	public static void setupClient(String IP)
 	{
 		Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
-		Logic.setPlayer(GUI);                         // Az õ játékosa a GUI
+		Logic.setPlayer2(GUI);                         // Az õ játékosa a GUI
 		GUI.setGameLogic(Logic);                      // GUI logikája a hálózat
 		((NetworkClient) Logic).connect(IP); // Csatlakozás
-		
+		((GameLogic) Logic).START_GAME();
 	}
 	
 	/**
@@ -64,8 +65,23 @@ public class ChessnutReloaded
 	public static void setupSinglePlayer()
 	{
 		Logic = new GameLogic(GUI);                  // Játéklogikát létrehozom
-		Opponent  = new AI(Logic);                   // AI az ellenfél PIG másféle lesz
+		Opponent  = new AI(Logic, Piece.BLACK);      // AI az ellenfél, sötét színben
 		GUI.setGameLogic(Logic);                     // Beállítom a GUI gamelogic-ját
-		Logic.setPlayer(Opponent);                   // Beállítom az AI-t ellenfélnek
+		Logic.setPlayer2(Opponent);                   // Beállítom az AI-t ellenfélnek
+		((GameLogic) Logic).START_GAME();
+	}
+	
+	/**
+	 * Gép a gép ellen játék felállítása
+	 */
+	public static void setupAIvsAI()
+	{
+		// Ez a rendes futás
+		Logic = new GameLogic();                      // Játéklogikát létrehozom
+		((GameLogic) Logic).setPlayer1(new AI(Logic, Piece.WHITE));  // AI az egyik játékos, világos színben
+		Opponent  = new AI(Logic, Piece.BLACK);                      // AI az ellenfél, sötét színben
+		Logic.setPlayer2(Opponent);                      // Beállítom a másik AI-t ellenfélnek
+		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag		
+		((GameLogic) Logic).START_GAME();
 	}
 }
