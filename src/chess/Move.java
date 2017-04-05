@@ -78,7 +78,7 @@ public class Move {
 		return castling;
 	}
 	
-	public String toString(){ // TODO change to a1 to b4 etc
+	public String toString(){
 		//return x1 + " " + y1 + " " + x2 + " " + y2;
 		return (char)('A'+x1) + "" + (y1+1) + " " + (char)('A'+x2) + "" + (y2+1);
 	}

@@ -214,9 +214,14 @@ public class GUI extends JFrame implements IPlayer
 				// Szerver indítása, ha még nem fut játék
 				if( !gameStarted )
 				{
-					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
+					try{
+					ChessnutReloaded.setupSinglePlayerWithRobotObserver(); // Játékmód felállítása
 					myPlayerColor = true; // white
 					gameStarted = true;
+					} catch (Exception exc)
+					{
+						exc.printStackTrace();
+					}
 				}
 			}
 		});
@@ -231,9 +236,13 @@ public class GUI extends JFrame implements IPlayer
 				// Szerver indítása, ha még nem fut játék
 				if( !gameStarted )
 				{
-					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
-					myPlayerColor = true; // white
+					try{
+					ChessnutReloaded.setupAIvsAIWithRobotObserver(); // Singleplayer setup
 					gameStarted = true;
+					} catch (Exception exc)
+					{
+						exc.printStackTrace();
+					}
 				}
 			}
 		});

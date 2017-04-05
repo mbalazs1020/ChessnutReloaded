@@ -11,4 +11,7 @@ public abstract class Network
 	
 	/**  Kapcsolat bontás  */
 	abstract void disconnect();
+	
+	/**  Üzenet küldés */
+	abstract void sendMsg(String msg);
 }

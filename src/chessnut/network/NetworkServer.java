@@ -227,4 +227,11 @@ public class NetworkServer extends Network implements IPlayer
 			System.err.println("Error while sending message to client: " + ex.getMessage());
 		}
 	}
+	
+	// Out of scope
+	@Override
+	void sendMsg(String msg)
+	{
+		return;
+	}
 }

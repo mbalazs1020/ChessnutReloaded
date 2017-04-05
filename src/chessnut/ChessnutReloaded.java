@@ -6,6 +6,7 @@ import chess.player.AI;
 import chessnut.gui.*;
 import chessnut.logic.*;
 import chessnut.network.*;
+import robot.RobotObserver;
 
 
 /**
@@ -82,6 +83,38 @@ public class ChessnutReloaded
 		Opponent  = new AI(Logic, Piece.BLACK);                      // AI az ellenfél, sötét színben
 		Logic.setPlayer2(Opponent);                      // Beállítom a másik AI-t ellenfélnek
 		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag		
+		((GameLogic) Logic).START_GAME();
+	}
+	
+	/**
+	 * Gép elleni játék robot végrehajtással
+	 */
+	public static void setupSinglePlayerWithRobotObserver() throws InterruptedException
+	{
+		Logic = new GameLogic(GUI);                          // Játéklogikát létrehozom
+		Opponent  = new AI(Logic, Piece.BLACK);              // AI az ellenfél, sötét színben
+		GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
+		Logic.setPlayer2(Opponent);                          // Beállítom az AI-t ellenfélnek
+		RobotObserver robotObserver = new RobotObserver();   // Robot obszerver csatlakozás
+		while( !robotObserver.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
+		((GameLogic) Logic).setRobotObserver(robotObserver); // Beállítom a robot végrehajtót
+		((GameLogic) Logic).START_GAME();
+	}
+	
+	/**
+	 * Gép a gép ellen játék robot végrehajtássa
+	 */
+	public static void setupAIvsAIWithRobotObserver() throws InterruptedException
+	{
+		// Ez a rendes futás
+		Logic = new GameLogic();                      // Játéklogikát létrehozom
+		((GameLogic) Logic).setPlayer1(new AI(Logic, Piece.WHITE));  // AI az egyik játékos, világos színben
+		Opponent  = new AI(Logic, Piece.BLACK);                      // AI az ellenfél, sötét színben
+		Logic.setPlayer2(Opponent);                      // Beállítom a másik AI-t ellenfélnek
+		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag
+		RobotObserver robotObserver = new RobotObserver();   // Robot obszerver csatlakozás
+		while( !robotObserver.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
+		((GameLogic) Logic).setRobotObserver(robotObserver); // Beállítom a robot végrehajtót
 		((GameLogic) Logic).START_GAME();
 	}
 }

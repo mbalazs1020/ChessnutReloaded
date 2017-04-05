@@ -195,4 +195,11 @@ public class NetworkClient extends Network implements ILogic
 		}
 	}
 	
+	// Out of scope
+	@Override
+	void sendMsg(String msg)
+	{
+		return;
+	}
+	
 }

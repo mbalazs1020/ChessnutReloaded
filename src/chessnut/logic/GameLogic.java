@@ -1,12 +1,14 @@
 package chessnut.logic;
 
 import util.*;
+
 import chess.Board;
 import chess.Move;
 import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.logic.ClickData;
 import chessnut.network.NetworkServer;
+import robot.RobotObserver;
 
 /**
  * Játéklogika osztálya
@@ -25,6 +27,9 @@ public class GameLogic implements ILogic
 	
 	/**  Obszerváló játékos, aki csak a táblát nézegeti */
 	IPlayer observer;
+	
+	/** Robot obszerver, aki végrehajtja a lépéseket */
+	RobotObserver robotObserver;
 
 	/**  Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem   */
 	private boolean gameStarted = false;
@@ -69,6 +74,11 @@ public class GameLogic implements ILogic
 	public void setObserver( IPlayer obs )
 	{
 		this.observer = obs;
+	}
+	
+	public void setRobotObserver( RobotObserver r )
+	{
+		this.robotObserver = r;
 	}
 	
 	public void START_GAME()
@@ -151,6 +161,8 @@ public class GameLogic implements ILogic
 		String player = position.getPlayerColor()? "Világos" : "Sötét";
 		System.out.println(player + " játékos ezt lépte: " + currentMove );
 		
+		boolean isHitMove = chessboard.isTileOccupied(currentMove.getX2(), currentMove.getY2()); // Ütés volt-e, lekérdezem, hogy a robot tudja
+		
 		// Megpróbálok lépni
 		if( chessboard.validateMove(currentMove, chessboard.getNextPlayerToMove(), true) ) // Ha értelmes volt a lépés
 		{
@@ -158,7 +170,17 @@ public class GameLogic implements ILogic
 			{
 				chessboard.switchNextPlayerToMove(); // Következõ játékos lép
 				moveStart = true; // Elsõ kattintása jöhet újra
-				sendChessboardToBoth();   // Kiküldöm a táblát mindkét játékosnak
+			//	sendChessboardToBoth();   // Kiküldöm a táblát mindkét játékosnak
+				
+				// Ha van robot obszerver, elküldöm neki, hogy lépje meg
+				if( robotObserver != null )
+				{
+					robotObserver.sendMoveReq(currentMove, isHitMove);
+					Thread ack = new Thread(new RobotMoveAcked());
+					ack.start(); // Várakozás van a robot visszajelzésére
+				}
+				else
+					sendChessboardToBoth();   // Kiküldöm a táblát mindkét játékosnak
 			}
 		}
 		else // Nem volt jó a lépés
@@ -240,6 +262,29 @@ public class GameLogic implements ILogic
 			sendChessboardToBoth();
 			
 			gameStarted = true;
+		}
+	}
+	
+	/**
+	 * Robot lépés visszajelzés megvárása
+	 */
+	private class RobotMoveAcked implements Runnable
+	{
+		@Override
+		public void run()
+		{
+			try {
+			while ( !robotObserver.isMsgAcked() )
+			{
+				Thread.sleep(1);
+			}
+			System.out.println("A robot végrehajtotta a lépést.\n");
+			sendChessboardToBoth(); // Küldöm a táblákat, ezzel folytatódhat
+			
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
 
