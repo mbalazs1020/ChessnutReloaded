@@ -6,7 +6,8 @@ import chess.player.AI;
 import chessnut.gui.*;
 import chessnut.logic.*;
 import chessnut.network.*;
-import robot.RobotObserver;
+import robot.RobotHandler;
+import robot.RobotPlayer;
 
 
 /**
@@ -95,8 +96,13 @@ public class ChessnutReloaded
 		Opponent  = new AI(Logic, Piece.BLACK);              // AI az ellenfél, sötét színben
 		GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
 		Logic.setPlayer2(Opponent);                          // Beállítom az AI-t ellenfélnek
-		RobotObserver robotObserver = new RobotObserver();   // Robot obszerver csatlakozás
+		RobotHandler robotObserver = new RobotHandler();   // Robot obszerver csatlakozás
 		while( !robotObserver.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
+		
+		// TODO PIG
+				RobotPlayer pl = new RobotPlayer();
+				pl.setRobotHandler(robotObserver);
+		
 		((GameLogic) Logic).setRobotObserver(robotObserver); // Beállítom a robot végrehajtót
 		((GameLogic) Logic).START_GAME();
 	}
@@ -112,7 +118,7 @@ public class ChessnutReloaded
 		Opponent  = new AI(Logic, Piece.BLACK);                      // AI az ellenfél, sötét színben
 		Logic.setPlayer2(Opponent);                      // Beállítom a másik AI-t ellenfélnek
 		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag
-		RobotObserver robotObserver = new RobotObserver();   // Robot obszerver csatlakozás
+		RobotHandler robotObserver = new RobotHandler();   // Robot obszerver csatlakozás
 		while( !robotObserver.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
 		((GameLogic) Logic).setRobotObserver(robotObserver); // Beállítom a robot végrehajtót
 		((GameLogic) Logic).START_GAME();

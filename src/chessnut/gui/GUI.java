@@ -237,7 +237,7 @@ public class GUI extends JFrame implements IPlayer
 				if( !gameStarted )
 				{
 					try{
-					ChessnutReloaded.setupAIvsAIWithRobotObserver(); // Singleplayer setup
+					ChessnutReloaded.setupAIvsAIWithRobotObserver(); // setup
 					gameStarted = true;
 					} catch (Exception exc)
 					{

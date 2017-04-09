@@ -5,8 +5,11 @@ import javax.management.RuntimeErrorException;
 import chess.Move;
 import chessnut.network.RobotConnectionServer;
 
-public class RobotObserver implements RobotInterface
+public class RobotHandler
 {
+	// Lehet, hogy éppen játszik is a robot, akkor itt van a játékra képes kiegészítõje
+	RobotPlayer player = null;
+	
 	// Ez lesz az épp kiküldött és visszavárt üzenet
 	String msgSent;
 	String msgAckWaiting;
@@ -15,8 +18,14 @@ public class RobotObserver implements RobotInterface
 	// Kacsolat a robotos szoftverrel
 	RobotConnectionServer robot;
 	
+	
+	public void setRobotPlayer( RobotPlayer player )
+	{
+		this.player = player;
+	}
+	
 	// Kapcsolat létrehozása
-	public RobotObserver() throws InterruptedException
+	public RobotHandler() throws InterruptedException
 	{
 		robot = new RobotConnectionServer();
 		robot.connect(null);
@@ -54,9 +63,13 @@ public class RobotObserver implements RobotInterface
 	// Robottól jött üzenet elkapása
 	public void handleIncomingMessage( String msgReceived )
 	{
-		// Ha tartalmazza amit kell, akkor elfogadom
-		if( msgReceived.contains(msgAckWaiting) ) 
+		// Ha tartalmazza a várt ACK-t, akkor elfogadom
+		if( msgReceived.contains(msgAckWaiting) && ( !isMsgAcked ) ) 
 			isMsgAcked = true;
+		else if ( msgReceived.contains("REQ") )
+		{
+			
+		}
 		else
 			throw new RuntimeErrorException(new Error("Leállok, mert nem várt üzenet jött! :("));
 	}

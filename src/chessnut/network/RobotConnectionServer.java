@@ -8,12 +8,12 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import robot.RobotInterface;
+import robot.RobotHandler;
 
 public class RobotConnectionServer extends Network
 {
 	// Robot Observer referencia
-	RobotInterface robotHandler;
+	RobotHandler robotHandler;
 	
 	// Konstansok
 	/**  Port száma   */
@@ -40,7 +40,7 @@ public class RobotConnectionServer extends Network
 	public RobotConnectionServer(){}
 	
 	
-	public void setRobotInterface( RobotInterface o )
+	public void setRobotInterface( RobotHandler o )
 	{
 		this.robotHandler = o;
 	}

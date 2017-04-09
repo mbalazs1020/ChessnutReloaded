@@ -8,7 +8,8 @@ import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.logic.ClickData;
 import chessnut.network.NetworkServer;
-import robot.RobotObserver;
+import robot.RobotHandler;
+import robot.RobotPlayer;
 
 /**
  * Játéklogika osztálya
@@ -29,7 +30,7 @@ public class GameLogic implements ILogic
 	IPlayer observer;
 	
 	/** Robot obszerver, aki végrehajtja a lépéseket */
-	RobotObserver robotObserver;
+	RobotHandler robotObserver;
 
 	/**  Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem   */
 	private boolean gameStarted = false;
@@ -76,7 +77,7 @@ public class GameLogic implements ILogic
 		this.observer = obs;
 	}
 	
-	public void setRobotObserver( RobotObserver r )
+	public void setRobotObserver( RobotHandler r )
 	{
 		this.robotObserver = r;
 	}
@@ -175,9 +176,24 @@ public class GameLogic implements ILogic
 				// Ha van robot obszerver, elküldöm neki, hogy lépje meg
 				if( robotObserver != null )
 				{
-					robotObserver.sendMoveReq(currentMove, isHitMove);
-					Thread ack = new Thread(new RobotMoveAcked());
-					ack.start(); // Várakozás van a robot visszajelzésére
+					// Le kellene szûrnöm, hogy ha a játékosom is maga a robot, akkor ezt ne küldje el
+					if( ( gui instanceof RobotPlayer ) || ( opponent instanceof RobotPlayer ) ) // Ha bármelyik játékos robotból van
+					{
+						// Ha a világos lép, akkor mehet ez
+						if( position.getPlayerColor() )
+						{
+							robotObserver.sendMoveReq(currentMove, isHitMove);
+							Thread ack = new Thread(new RobotMoveAcked());
+							ack.start(); // Várakozás van a robot visszajelzésére
+						}
+						// Egyébként a sötét van, ami maga a robot játékos, nem kell megmutatni neki a lépést
+					}
+					else
+					{
+						robotObserver.sendMoveReq(currentMove, isHitMove);
+						Thread ack = new Thread(new RobotMoveAcked());
+						ack.start(); // Várakozás van a robot visszajelzésére
+					}
 				}
 				else
 					sendChessboardToBoth();   // Kiküldöm a táblát mindkét játékosnak
