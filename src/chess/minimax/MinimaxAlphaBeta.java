@@ -39,7 +39,7 @@ public class MinimaxAlphaBeta {
 			return eval1(b, state, color);
 		
 		ArrayList<Move> moves = b.getMovesAfter(color, state);
-		if(moves.size() == 0) // TODO add draw
+		if(moves.size() == 0) // TODO eredeti fejlesztõ megjegyzése: add draw
 			return Float.NEGATIVE_INFINITY;
 		
 		for(int i = 0; i < moves.size(); i++) {
@@ -68,7 +68,7 @@ public class MinimaxAlphaBeta {
 			return eval1(b, state, !color);
 		
 		ArrayList<Move> moves = b.getMovesAfter(!color, state);
-		if(moves.size() == 0) // TODO add draw
+		if(moves.size() == 0) // TODO eredeti fejlesztõ megjegyzése: add draw
 			return Float.POSITIVE_INFINITY;
 		
 		for(int i = 0; i < moves.size(); i++) {

@@ -8,8 +8,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+
 import robot.RobotHandler;
 
+/**
+ * A robotszoftverrel kapcsolatot tartó TCP szerver
+ * 
+ */
 public class RobotConnectionServer extends Network
 {
 	// Robot Observer referencia
@@ -37,10 +42,13 @@ public class RobotConnectionServer extends Network
 	// Függvények
 	
 	/**  Default konstruktor   */
-	public RobotConnectionServer(){}
+	public RobotConnectionServer()
+	{
+		System.out.println("Robot TCP szerver létrejött.");
+	}
 	
 	
-	public void setRobotInterface( RobotHandler o )
+	public void setRobotHandler( RobotHandler o )
 	{
 		this.robotHandler = o;
 	}
@@ -166,6 +174,7 @@ public class RobotConnectionServer extends Network
 
 			try
 			{
+				
 				// Érkezõ objektumok itt jönnek be
 				while (true)
 				{
@@ -175,23 +184,28 @@ public class RobotConnectionServer extends Network
 					
 					if( received != null )
 					{
+						System.out.println("NYERS ÜZENET JÖTT: " + received);
 						if( robotHandler != null )
 						{
-							robotHandler.handleIncomingMessage(received);
+							robotHandler.handleIncomingMessage(received); // Átadom a robotüzenetfeldolgozónak
 						}
 					}
 				}
-			} catch (Exception ex)
+			} catch (IOException ex)
 			{
 				//ex.printStackTrace();
-				System.err.println("Client disconnected!");
+				System.err.println("A robot üzenetfogadásnál IO exception");
+				ex.printStackTrace();
 				System.exit(0);
-			} finally
+			} catch (NullPointerException ex) {
+				System.out.println("Kapcsolat lebomlott");
+				ex.printStackTrace();
+			}
+			finally
 			{
 				// Ha véletlenül kiugrunk ebbõl, akkor bontás
 				disconnect();
 			}
 		}
 	}
-	
 }

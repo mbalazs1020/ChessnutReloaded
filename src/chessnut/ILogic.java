@@ -9,7 +9,7 @@ import chessnut.logic.*;
 public interface ILogic
 {
 	/**  Player/AI általi kattintás ezen jut fel a logikához   */
-	void click(ClickData position);                                
+	public boolean click(ClickData position);                                
 	
 	/**  IPlayer interfészû elemre referencia beállítása   */
 	public abstract void setPlayer2( IPlayer player );      

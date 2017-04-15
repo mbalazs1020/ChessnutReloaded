@@ -171,24 +171,29 @@ public class GUI extends JFrame implements IPlayer
          */
 		
 		/** Szerverindítás almenüpont */
-		menuItem = new JMenuItem("Valós játék robot ellen");   // Start szerver almenüpont
+		menuItem = new JMenuItem("Robot elleni valós játék AI ellenféllel");   // Start szerver almenüpont
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// Szerver indítása, ha még nem fut játék
-				if( !gameStarted )
+				try{
+					// Szerver indítása, ha még nem fut játék
+					if( !gameStarted )
+					{
+						ChessnutReloaded.setupRobotAgainstAI(); // játék robot ellen
+						myPlayerColor = true; // white
+						gameStarted = true;
+					}
+				}catch( Exception exc)
 				{
-					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
-					myPlayerColor = true; // white
-					gameStarted = true;
+					exc.printStackTrace();
 				}
 			}
 		});
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Szerver indítás: Online játék robot végrehajtással");   // Start szerver almenüpont
+		menuItem = new JMenuItem("Robot elleni valós játék játékos ellenféllel");   // Start szerver almenüpont
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -197,13 +202,19 @@ public class GUI extends JFrame implements IPlayer
 				// Szerver indítása, ha még nem fut játék
 				if( !gameStarted )
 				{
-					//ChessnutReloaded.setupSinglePlayer(); // Singleplayer setup TODO új játékmód felállítása
+					try{
+					ChessnutReloaded.setupRobotAgainstPlayer(); // Játékmód felállítása
 					myPlayerColor = true; // white
 					gameStarted = true;
+					} catch (Exception exc)
+					{
+						exc.printStackTrace();
+					}
 				}
 			}
 		});
 		menu.add(menuItem);
+		
 		
 		menuItem = new JMenuItem("Gép elleni játék robot végrehajtással");   // Start szerver almenüpont
 		menuItem.addActionListener(new ActionListener()
@@ -227,7 +238,7 @@ public class GUI extends JFrame implements IPlayer
 		});
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Gép a gép ellen játék robot végrehajtással");   // Start szerver almenüpont
+		menuItem = new JMenuItem("Gép a gép ellen játék megfigyelése robot végrehajtással");   // Start szerver almenüpont
 		menuItem.addActionListener(new ActionListener()
 		{
 			@Override

@@ -96,13 +96,9 @@ public class ChessnutReloaded
 		Opponent  = new AI(Logic, Piece.BLACK);              // AI az ellenfél, sötét színben
 		GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
 		Logic.setPlayer2(Opponent);                          // Beállítom az AI-t ellenfélnek
-		RobotHandler robotObserver = new RobotHandler();   // Robot obszerver csatlakozás
-		while( !robotObserver.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
-		
-		// TODO PIG
-				RobotPlayer pl = new RobotPlayer();
-				pl.setRobotHandler(robotObserver);
-		
+		RobotHandler robotObserver = new RobotHandler();     // Robot obszerver csatlakozás
+		robotObserver.connect();
+		while( !robotObserver.isConnected() ) Thread.sleep(1);
 		((GameLogic) Logic).setRobotObserver(robotObserver); // Beállítom a robot végrehajtót
 		((GameLogic) Logic).START_GAME();
 	}
@@ -119,8 +115,49 @@ public class ChessnutReloaded
 		Logic.setPlayer2(Opponent);                      // Beállítom a másik AI-t ellenfélnek
 		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag
 		RobotHandler robotObserver = new RobotHandler();   // Robot obszerver csatlakozás
+		robotObserver.connect();
 		while( !robotObserver.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
 		((GameLogic) Logic).setRobotObserver(robotObserver); // Beállítom a robot végrehajtót
+		((GameLogic) Logic).START_GAME();
+	}
+	
+	/*
+	 * Élõben lépkedünk a robot ellen
+	 */
+	public static void setupRobotAgainstAI() throws InterruptedException
+	{
+		Opponent  = new AI(Logic, Piece.WHITE);              // AI az ellenfél, világos színben
+		Logic = new GameLogic(Opponent);                     // Játéklogikát létrehozom, AI az ellenfél
+		GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
+		RobotHandler robotHandler = new RobotHandler();      // Robot obszerver csatlakozás
+		robotHandler.connect();
+		while( !robotHandler.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
+		RobotPlayer pl = new RobotPlayer(); // Mindig sötét
+		pl.setRobotHandler(robotHandler);
+		robotHandler.setRobotPlayer(pl);
+		Logic.setPlayer2(pl);     
+		pl.setGameLogic(Logic);// Beállítom a robotplayert ellenfélnek
+		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag
+		((GameLogic) Logic).setRobotObserver(robotHandler); // Beállítom a robot végrehajtót
+		((GameLogic) Logic).START_GAME();
+	}
+	
+	/*
+	 * Élõben lépkedünk a robot ellen, valódi játékos az ellenfél
+	 */
+	public static void setupRobotAgainstPlayer() throws InterruptedException
+	{
+		Logic = new GameLogic(GUI);                          // Játéklogikát létrehozom, világos a GUI
+		GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
+		RobotHandler robotHandler = new RobotHandler();      // Robot obszerver csatlakozás
+		robotHandler.connect();
+		while( !robotHandler.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
+		RobotPlayer pl = new RobotPlayer(); // Mindig sötét
+		pl.setRobotHandler(robotHandler);
+		robotHandler.setRobotPlayer(pl);
+		Logic.setPlayer2(pl);     
+		pl.setGameLogic(Logic);// Beállítom a robotplayert ellenfélnek
+		((GameLogic) Logic).setRobotObserver(robotHandler); // Beállítom a robot végrehajtót
 		((GameLogic) Logic).START_GAME();
 	}
 }

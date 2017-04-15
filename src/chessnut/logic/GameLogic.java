@@ -92,7 +92,7 @@ public class GameLogic implements ILogic
 	 * Játéklogika a click-et kezeli
 	 */
 	@Override
-	public void click(ClickData position)
+	public boolean click(ClickData position)
 	{
 //		String colorString = position.getPlayerColor() ? "WHITE" : "BLACK";
 //		System.out.println(colorString + " játékos kattintotta: " + position);
@@ -101,7 +101,7 @@ public class GameLogic implements ILogic
 		if(chessboard.getNextPlayerToMove() != position.getPlayerColor())
 		{
 			System.out.println("Nem õ jön, ne kattintgasson.");
-			return;
+			return false;
 		}
 
 		// Elsõ kattintása jön:
@@ -113,6 +113,7 @@ public class GameLogic implements ILogic
 		{
 			secondClick(position);
 		}
+		return true;
 	}
 
 	
@@ -182,11 +183,16 @@ public class GameLogic implements ILogic
 						// Ha a világos lép, akkor mehet ez
 						if( position.getPlayerColor() )
 						{
+							System.out.println("Világosnak elküldve az obszerver lépés a világostól");
 							robotObserver.sendMoveReq(currentMove, isHitMove);
 							Thread ack = new Thread(new RobotMoveAcked());
 							ack.start(); // Várakozás van a robot visszajelzésére
 						}
-						// Egyébként a sötét van, ami maga a robot játékos, nem kell megmutatni neki a lépést
+						// Egyébként a sötét lépett, ezt a világosnak megmutatom
+						else
+						{
+							sendChessboardToBoth();
+						}
 					}
 					else
 					{

@@ -175,23 +175,25 @@ public class NetworkClient extends Network implements ILogic
 	 * click átküldése a szervernek
 	 */
 	@Override
-	public void click( ClickData position )
+	public boolean click( ClickData position )
 	{
 		
 		// Ha nincs meg az output stream, akkor gond van
 		if (out == null)
 		{
 			System.out.println("Could not send: output stream is not open.");
-			return;
+			return false;
 		}
 		// Küldés
 		try
 		{
 			out.writeObject(position);
 			out.flush();
+			return true;
 		} catch (IOException ex)
 		{
 			System.err.println("Error while sending message to server.");
+			return false;
 		}
 	}
 	
