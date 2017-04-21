@@ -21,7 +21,7 @@ public class AI implements IPlayer
 	public AI( ILogic logic, boolean PlayerColor )
 	{
 		this.logic = logic;
-		myAIPlayer = new AlphaBetaPlayer(PlayerColor, 2);  // Most mindig sötét vagyok, és alfabéta
+		myAIPlayer = new AlphaBetaPlayer(PlayerColor, 3);  // Most mindig sötét vagyok, és alfabéta
 		moveStateMachine = MOVE_SM.START;  // Állapotgép belövése		
 	}
 	
@@ -29,6 +29,7 @@ public class AI implements IPlayer
 	@Override
 	public void setChessboard(Board chessboard)
 	{		
+		System.out.println("AI táblát kapott");
 		myChessboard = new Board(chessboard);
 		thread = new Thread( new ChessboardHandlerThread() );
 		thread.start();  // Külön threadben futtatom az állapotgépet
@@ -61,6 +62,7 @@ public class AI implements IPlayer
 				// Ha nem õ jön, ne kattintgasson
 				if( myAIPlayer.getColor() != myChessboard.getNextPlayerToMove() )
 				{
+					System.out.println("NEM Õ JÖN: " + myChessboard.getNextPlayerToMove() + " jön, õ pedig " + myAIPlayer.getColor());
 					return;
 				}
 			//	System.out.println("Mesterséges Intelligencia játékos feldolgozza a táblát...");

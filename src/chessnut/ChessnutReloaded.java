@@ -126,9 +126,11 @@ public class ChessnutReloaded
 	 */
 	public static void setupRobotAgainstAI() throws InterruptedException
 	{
-		Opponent  = new AI(Logic, Piece.WHITE);              // AI az ellenfél, világos színben
-		Logic = new GameLogic(Opponent);                     // Játéklogikát létrehozom, AI az ellenfél
-		GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
+		Logic = new GameLogic();                          // Játéklogikát létrehozom, világos a GUI
+		IPlayer ai = new AI(Logic, Piece.WHITE);
+		((GameLogic) Logic).setPlayer1(ai);
+		ai.setGameLogic(Logic);
+		//GUI.setGameLogic(Logic);                             // Beállítom a GUI gamelogic-ját
 		RobotHandler robotHandler = new RobotHandler();      // Robot obszerver csatlakozás
 		robotHandler.connect();
 		while( !robotHandler.isConnected() ) Thread.sleep(1); // Várom hogy csatlakozzon 
@@ -136,7 +138,7 @@ public class ChessnutReloaded
 		pl.setRobotHandler(robotHandler);
 		robotHandler.setRobotPlayer(pl);
 		Logic.setPlayer2(pl);     
-		pl.setGameLogic(Logic);// Beállítom a robotplayert ellenfélnek
+		pl.setGameLogic(Logic);// Beállítom a robotplayert ellenfélnek;
 		((GameLogic) Logic).setObserver(GUI);            // GUI az obszerváló tag
 		((GameLogic) Logic).setRobotObserver(robotHandler); // Beállítom a robot végrehajtót
 		((GameLogic) Logic).START_GAME();

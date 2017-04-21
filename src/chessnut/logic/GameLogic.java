@@ -283,6 +283,8 @@ public class GameLogic implements ILogic
 			// Mehet ki a tábla
 			sendChessboardToBoth();
 			
+			System.out.println("ELSÕ TÁBLÁK KIKÜLDVE");
+			
 			gameStarted = true;
 		}
 	}
